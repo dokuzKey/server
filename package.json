@@ -9,7 +9,6 @@
     "start": "node dist/index.js",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
-
   "devDependencies": {
     "@eslint/js": "^9.10.0",
     "@types/bcrypt": "^5.0.2",
@@ -28,6 +27,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "helmet": "^7.1.0",
-    "mongoose": "^8.6.3"
+    "mongoose": "^8.6.3",
+    "thencrypt": "^1.0.1"
   }
 }

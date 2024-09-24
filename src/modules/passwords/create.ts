@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import User from '../../models/User';
 import Password from '../../models/Password';
 import { Types } from 'mongoose';
+import thencrypt from 'thencrypt';
 
 interface PasswordCreateRequest extends Request {
   query: {
@@ -30,10 +31,14 @@ const passwordsCreate = async (
         .status(400)
         .json({ status: 0, message: 'Fill in all the fields' });
     }
+
+    const encryptor = new thencrypt(token as string);
+    const encryptedPass = await encryptor.encrypt(password as string);
+
     const newPassword = new Password({
       siteAdress,
       username,
-      password
+      password: encryptedPass
     });
     await newPassword.save();
     user.passwords.push(newPassword._id as Types.ObjectId);
