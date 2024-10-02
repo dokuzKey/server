@@ -35,7 +35,12 @@ const notesGet = async (req: Request, res: Response): Promise<Response> => {
     const decryptedNotes = await Promise.all(
       notes.map(async (note) => {
         const decryptedContent = await encryptor.decrypt(note.body);
-        return { ...note, body: decryptedContent.toString() };
+        return { 
+          id: note._id,
+          title: note.title,
+          body: decryptedContent.toString(),
+          createdAt: note.createdAt
+        };
       })
     );
     return res.status(200).json({ status: 1, data: decryptedNotes });
