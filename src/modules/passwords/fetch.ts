@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import thencrypt from 'thencrypt';
 import User from '../../models/User';
 import Password from '../../models/Password';
 
@@ -8,6 +9,10 @@ interface UserType {
 }
 
 interface PasswordType {
+  username: string;
+  password: string;
+  url: string;
+  createdAt: Date;
   _id: string;
 }
 
@@ -21,11 +26,27 @@ const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
     if (!user) {
       return res.status(404).json({ status: 0, message: 'User not found' });
     }
+    const encryptor = new thencrypt(token);
     const passwordIds = user.passwords.map((password) => password._id);
     const passwords: PasswordType[] = await Password.find({
       _id: { $in: passwordIds }
     });
-    return res.status(200).json({ status: 1, passwords });
+
+    const passwordData = await Promise.all(
+      passwords.map(async (password) => {
+        const decryptedPassword = await encryptor.decrypt(password.password);
+
+        return {
+          id: password._id,
+          username: password.username,
+          password: decryptedPassword.toString(),
+          url: password.url,
+          createdAt: password.createdAt
+        };
+      })
+    );
+
+    return res.status(200).json({ status: 1, data: passwordData });
   } catch (error) {
     return res
       .status(500)
