@@ -5,6 +5,7 @@ import Password from '../../models/Password';
 import Note from '../../models/Note';
 import dotenv from 'dotenv';
 import { Types } from 'mongoose';
+import thencrypt from 'thencrypt';
 
 dotenv.config();
 
@@ -37,23 +38,34 @@ const register = async (req: Request, res: Response): Promise<Response> => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = await bcrypt.hash(hashedPassword, 10);
+    const encryptor = new thencrypt(token);
+
+    const encryptedPassword = await encryptor.encrypt(password);
     const newPassword = new Password({
       siteAdress: process.env.SITEADRESS,
       username,
-      password
+      password: encryptedPassword
     });
+
+    const encryptedBody = await encryptor.encrypt(
+      `This is an example note. It's encrypted.`
+    ); // Await encryption
+
     const newNote = new Note({
-      title: 'Welcome to your notes',
-      body: 'This is an example note.'
+      title: 'This is an example note.',
+      body: encryptedBody
     });
+
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
       token
     });
+
     await newPassword.save();
     await newNote.save();
+
     newUser.passwords.push(newPassword._id as Types.ObjectId);
     newUser.notes.push(newNote._id as Types.ObjectId);
     await newUser.save();
