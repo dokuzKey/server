@@ -9,6 +9,7 @@ interface UserType {
 }
 
 interface PasswordType {
+  siteAddress: string;
   siteAdress: string;
   username: string;
   password: string;
@@ -36,7 +37,6 @@ const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
     const passwordData = await Promise.all(
       passwords.map(async (password) => {
         const decryptedPassword = await encryptor.decrypt(password.password);
-
         return {
           id: password._id,
           siteAddress: password.siteAdress,

@@ -42,7 +42,7 @@ const register = async (req: Request, res: Response): Promise<Response> => {
 
     const encryptedPassword = await encryptor.encrypt(password);
     const newPassword = new Password({
-      siteAdress: process.env.SITEADRESS,
+      siteAddress: process.env.SITEADDRESS,
       username,
       password: encryptedPassword
     });

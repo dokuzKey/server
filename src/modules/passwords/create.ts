@@ -7,7 +7,7 @@ import thencrypt from 'thencrypt';
 interface PasswordCreateRequest extends Request {
   query: {
     token?: string;
-    siteAdress?: string;
+    siteAddress?: string;
     username?: string;
     password?: string;
   };
@@ -18,7 +18,7 @@ const passwordsCreate = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { token, siteAdress, username, password } = req.query;
+    const { token, siteAddress, username, password } = req.query;
     if (!token) {
       return res.status(400).json({ status: 0, message: 'Token is required' });
     }
@@ -26,7 +26,7 @@ const passwordsCreate = async (
     if (!user) {
       return res.status(404).json({ status: 0, message: 'User not found' });
     }
-    if (!siteAdress || !username || !password) {
+    if (!siteAddress || !username || !password) {
       return res
         .status(400)
         .json({ status: 0, message: 'Fill in all the fields' });
@@ -36,7 +36,7 @@ const passwordsCreate = async (
     const encryptedPass = await encryptor.encrypt(password as string);
 
     const newPassword = new Password({
-      siteAdress,
+      siteAddress,
       username,
       password: encryptedPass
     });

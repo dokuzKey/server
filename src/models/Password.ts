@@ -1,14 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 interface IPassword extends Document {
-  siteAdress: string;
+  siteAddress: string;
   username: string;
   password: string;
   createdAt: Date;
 }
 
 const passwordSchema: Schema = new Schema({
-  siteAdress: {
+  siteAddress: {
     type: String,
     required: true
   },
