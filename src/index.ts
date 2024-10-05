@@ -21,6 +21,10 @@ connectDB();
 import register from './modules/auth/register';
 import login from './modules/auth/login';
 
+// Lister handlers
+import listPasswords from './modules/listers/password';
+import listNotes from './modules/listers/note';
+
 app.all('/', (req: Request, res: Response) => {
   res.json({
     status: 1,
@@ -60,6 +64,19 @@ app.post('/api/auth/register', (req: Request, res: Response) => {
 
 app.post('/api/auth/login', (req: Request, res: Response) => {
   login(req, res);
+});
+
+app.get('/api/list/:item', (req: Request, res: Response) => {
+  if (req.params.item === 'passwords') {
+    listPasswords(req, res);
+  } else if (req.params.item === 'notes') {
+    listNotes(req, res);
+  } else {
+    return res.json({
+      status: 0,
+      message: 'Please call a valid API endpoint!'
+    });
+  }
 });
 
 app.listen(process.env.PORT, () => {
