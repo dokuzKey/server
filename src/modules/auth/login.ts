@@ -11,7 +11,7 @@ interface LoginRequest extends Request {
 
 const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password } = req.query as {
+    const { username, password } = req.body as {
       username: string;
       password: string;
     };

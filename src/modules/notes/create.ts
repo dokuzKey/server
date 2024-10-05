@@ -14,7 +14,7 @@ interface NoteCreateRequest extends Request {
 
 const notesCreate = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { token, title, body } = req.query;
+    const { token, title, body } = req.body;
     if (!token) {
       return res.status(400).json({ status: 0, message: 'Token is required' });
     }
@@ -29,9 +29,10 @@ const notesCreate = async (req: Request, res: Response): Promise<Response> => {
     }
     const encryptor = new thencrypt(token as string);
     const encryptedBody = await encryptor.encrypt(body as string);
+    const encryptedTitle = await encryptor.encrypt(title as string);
 
     const note = new Note({
-      title,
+      title: encryptedTitle,
       body: encryptedBody
     });
     await note.save();

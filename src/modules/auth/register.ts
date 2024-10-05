@@ -18,7 +18,7 @@ interface RegisterRequest extends Request {
 }
 
 const register = async (req: Request, res: Response): Promise<Response> => {
-  const { username, email, password } = req.query as {
+  const { username, email, password } = req.body as {
     username: string;
     email: string;
     password: string;
@@ -41,18 +41,25 @@ const register = async (req: Request, res: Response): Promise<Response> => {
     const encryptor = new thencrypt(token);
 
     const encryptedPassword = await encryptor.encrypt(password);
+    const encryptedEmail = await encryptor.encrypt(email);
+    const encryptedUsername = await encryptor.encrypt(username);
+
     const newPassword = new Password({
-      siteAddress: process.env.SITEADDRESS,
-      username,
+      siteAddress: (
+        await encryptor.encrypt(process.env.SITEADDRESS as string)
+      ).toString(),
+      email: encryptedEmail,
+      username: encryptedUsername,
       password: encryptedPassword
     });
 
     const encryptedBody = await encryptor.encrypt(
       `This is an example note. It's encrypted.`
-    ); // Await encryption
+    );
+    const encryptedTitle = await encryptor.encrypt('This is an example note.');
 
     const newNote = new Note({
-      title: 'This is an example note.',
+      title: encryptedTitle,
       body: encryptedBody
     });
 

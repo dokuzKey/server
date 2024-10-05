@@ -18,7 +18,7 @@ const passwordsCreate = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { token, siteAddress, username, password } = req.query;
+    const { token, siteAddress, username, password } = req.body;
     if (!token) {
       return res.status(400).json({ status: 0, message: 'Token is required' });
     }
@@ -33,11 +33,14 @@ const passwordsCreate = async (
     }
 
     const encryptor = new thencrypt(token as string);
+
+    const encryptedUsername = await encryptor.encrypt(username as string);
+    const encrypedSiteAddress = await encryptor.encrypt(siteAddress as string);
     const encryptedPass = await encryptor.encrypt(password as string);
 
     const newPassword = new Password({
-      siteAddress,
-      username,
+      siteAddress: encrypedSiteAddress,
+      username: encryptedUsername,
       password: encryptedPass
     });
     await newPassword.save();
