@@ -18,7 +18,7 @@ interface NoteDocument {
 
 const notesGet = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { token } = req.query;
+    const { token } = req.body;
     if (!token || typeof token !== 'string') {
       return res.status(400).json({ status: 0, message: 'Token is required' });
     }
@@ -34,16 +34,27 @@ const notesGet = async (req: Request, res: Response): Promise<Response> => {
     }).lean()) as unknown as NoteDocument[];
     const decryptedNotes = await Promise.all(
       notes.map(async (note) => {
+        const decryptedTitle = await encryptor.decrypt(note.title);
         const decryptedContent = await encryptor.decrypt(note.body);
         return {
+          _id: note._id,
           id: note._id,
-          title: note.title,
+          title: decryptedTitle.toString(),
           body: decryptedContent.toString(),
           createdAt: note.createdAt
         };
       })
     );
-    return res.status(200).json({ status: 1, data: decryptedNotes });
+
+    const notesById = decryptedNotes.reduce(
+      (acc, note) => {
+        acc[note.id] = note;
+        return acc;
+      },
+      {} as { [key: string]: NoteDocument }
+    );
+
+    return res.status(200).json({ status: 1, data: notesById });
   } catch (error) {
     return res
       .status(500)

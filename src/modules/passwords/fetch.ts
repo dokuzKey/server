@@ -20,7 +20,7 @@ interface PasswordType {
 
 const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { token } = req.query;
+    const { token } = req.body;
     if (!token || typeof token !== 'string') {
       return res.status(400).json({ status: 0, message: 'Token is required' });
     }
@@ -36,19 +36,30 @@ const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
 
     const passwordData = await Promise.all(
       passwords.map(async (password) => {
+        const decryptedSiteAddress = await encryptor.decrypt(
+          password.siteAddress
+        );
+        const decryptedUsername = await encryptor.decrypt(password.username);
         const decryptedPassword = await encryptor.decrypt(password.password);
         return {
           id: password._id,
-          siteAddress: password.siteAdress,
-          username: password.username,
+          siteAddress: decryptedSiteAddress.toString(),
+          username: decryptedUsername.toString(),
           password: decryptedPassword.toString(),
-          url: password.url,
           createdAt: password.createdAt
         };
       })
     );
 
-    return res.status(200).json({ status: 1, data: passwordData });
+    const passwordDataById = passwordData.reduce(
+      (acc, password) => {
+        acc[password.id] = password;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+
+    return res.status(200).json({ status: 1, data: passwordDataById });
   } catch (error) {
     return res
       .status(500)
