@@ -158,7 +158,7 @@ _____
 \* *This function might return an error. Please see the designated **[errors](#errors)** section.*
 _____
 
-# Notes
+# Notes
 ## Create a note
 
 **Endpoint:** `/api/create/notes`
