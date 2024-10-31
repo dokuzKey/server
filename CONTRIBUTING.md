@@ -7,7 +7,7 @@ Thank you for considering contributing to our project! Here are some guidelines 
 1. **Fork the Repository**: Create a personal fork of the project on GitHub.
 2. **Clone the Repository**: Clone your fork to your local machine.
     ```sh
-    git clone https://git.college/dokuzKey/server
+    git clone https://github.com/dokuzKey/server
     ```
 3. **Create a Branch**: Create a new branch for your work.
     ```sh
