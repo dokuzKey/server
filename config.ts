@@ -4,7 +4,7 @@
 /* This protects your sensitive data from being exposed to the public due to wrong git commits. */
 
 const config = {
-  port: 80, // Configure the application port
+  port: 3000, // Configure the application port
   siteAddress: 'https://sifre.org.tr' // Configure the site address
 };
 

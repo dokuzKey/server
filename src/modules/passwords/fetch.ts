@@ -27,7 +27,7 @@ const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
         .status(400)
         .json({ status: false, message: 'You are not authenticated' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_KEY as string);
     const user: UserType | null = await User.findOne({
       email: (decoded as any).email
     });
@@ -67,6 +67,7 @@ const passwordsGet = async (req: Request, res: Response): Promise<Response> => {
 
     return res.status(200).json({ status: true, data: passwordDataById });
   } catch (error) {
+    console.log((error as Error).message);
     return res
       .status(500)
       .json({ status: false, message: 'Something failed in our end' });

@@ -23,7 +23,7 @@ const notesCreate = async (req: Request, res: Response): Promise<Response> => {
         .status(400)
         .json({ status: false, message: 'You are not authenticated' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_KEY as string);
     const user = await User.findOne({ email: (decoded as any).email });
     if (!user) {
       return res.status(404).json({ status: false, message: 'User not found' });

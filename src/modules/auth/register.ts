@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import bip39 from 'bip39';
+import { generateMnemonic } from 'bip39';
 import { Request, Response } from 'express';
 import User from '../../models/User';
 import Password from '../../models/Password';
@@ -8,6 +8,7 @@ import Note from '../../models/Note';
 import dotenv from 'dotenv';
 import { Types } from 'mongoose';
 import thencrypt from 'thencrypt';
+import config from '../../../config';
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ const register = async (req: Request, res: Response): Promise<Response> => {
         .json({ status: false, message: 'This email is already in use' });
     }
 
-    const passphrase = bip39.generateMnemonic(128).replace(/ /g, '-');
+    const passphrase = generateMnemonic(128).replace(/ /g, '-');
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = jwt.sign({ email }, process.env.JWT_KEY as string);
     const encryptor = new thencrypt(passphrase);
@@ -52,12 +53,12 @@ const register = async (req: Request, res: Response): Promise<Response> => {
     const encryptedEmail = await serverEncryptor.encrypt(
       await encryptor.encrypt(email)
     );
+    const encryptedSiteAddress = await serverEncryptor.encrypt(
+      await encryptor.encrypt(config.siteAddress as string)
+    );
 
     const newPassword = new Password({
-      siteAddress: serverEncryptor
-        .encrypt(await encryptor.encrypt(process.env.SITEADDRESS as string))
-        .toString()
-        .toString(),
+      siteAddress: encryptedSiteAddress,
       username: encryptedEmail,
       password: encryptedPassword
     });
