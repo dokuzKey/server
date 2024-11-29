@@ -1,5 +1,6 @@
 import config from '../../config';
 import dotenv from 'dotenv';
+import connectDB from '../modules/database/connect';
 dotenv.config();
 
 export default function bootCheck() {
@@ -41,4 +42,6 @@ export default function bootCheck() {
   console.log(
     '✅ Verified config value validity! Continuing start-up process...'
   );
+
+  connectDB();
 }
