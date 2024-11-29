@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "version": "0.5.1",
+  "endpoints": {
+    "passwords": {
+      "fetch": "/fetch/passwords",
+      "create": "/create/password"
+    },
+    "notes": {
+      "fetch": "/fetch/notes",
+      "create": "/create/notes"
+    },
+    "auth": {
+      "login": "/auth/login",
+      "register": "/auth/register"
+    }
+  }
+}
