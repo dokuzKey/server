@@ -37,7 +37,7 @@ app.all('/', (req, res) => {
   res.status(200).json(validEndpoints);
 });
 
-app.get('/api/fetch/:item', (req: Request, res: Response) => {
+app.get('/fetch/:item', (req: Request, res: Response) => {
   if (req.params.item === 'passwords') {
     return passwordsGet(req, res);
   } else if (req.params.item === 'notes') {
@@ -50,7 +50,7 @@ app.get('/api/fetch/:item', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/create/:item', (req: Request, res: Response) => {
+app.post('/create/:item', (req: Request, res: Response) => {
   if (req.params.item === 'passwords') {
     return passwordsCreate(req, res);
   } else if (req.params.item === 'notes') {
@@ -63,7 +63,7 @@ app.post('/api/create/:item', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/auth/:item', (req: Request, res: Response) => {
+app.post('/auth/:item', (req: Request, res: Response) => {
   if (req.params.item === 'register') {
     return register(req, res);
   }
