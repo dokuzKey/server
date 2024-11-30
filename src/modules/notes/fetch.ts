@@ -45,7 +45,6 @@ const notesGet = async (req: Request, res: Response): Promise<Response> => {
         const decryptedTitle = await encryptor.decrypt(note.title);
         const decryptedContent = await encryptor.decrypt(note.body);
         return {
-          _id: note._id,
           id: note._id,
           title: decryptedTitle.toString(),
           body: decryptedContent.toString(),
@@ -55,12 +54,12 @@ const notesGet = async (req: Request, res: Response): Promise<Response> => {
     );
 
     const notesById = decryptedNotes.reduce(
-      (acc, note) => {
-        acc[note.id] = note;
-        return acc;
-      },
-      {} as { [key: string]: NoteDocument }
-    );
+        (acc, note) => {
+          acc[note.id] = note;
+          return acc;
+        },
+        {} as Record<string, any>
+      );
 
     return res.status(200).json({ status: true, data: notesById });
   } catch (error) {
