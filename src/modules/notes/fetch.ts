@@ -54,12 +54,12 @@ const notesGet = async (req: Request, res: Response): Promise<Response> => {
     );
 
     const notesById = decryptedNotes.reduce(
-        (acc, note) => {
-          acc[note.id] = note;
-          return acc;
-        },
-        {} as Record<string, any>
-      );
+      (acc, note) => {
+        acc[note.id] = note;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
 
     return res.status(200).json({ status: true, data: notesById });
   } catch (error) {
