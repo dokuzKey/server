@@ -4,11 +4,13 @@
   "endpoints": {
     "passwords": {
       "fetch": "/fetch/passwords",
-      "create": "/create/password"
+      "create": "/create/passwords",
+      "delete": "/delete/passwords"
     },
     "notes": {
       "fetch": "/fetch/notes",
-      "create": "/create/notes"
+      "create": "/create/notes",
+      "delete": "/delete/notes"
     },
     "auth": {
       "login": "/auth/login",
