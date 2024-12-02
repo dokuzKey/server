@@ -23,11 +23,13 @@ app.use(express.json());
 import passwordsGet from './modules/passwords/fetch';
 import passwordsCreate from './modules/passwords/create';
 import passwordsDelete from './modules/passwords/delete';
+import passwordsEdit from './modules/passwords/edit';
 
 /* Note handlers */
 import notesGet from './modules/notes/fetch';
 import notesCreate from './modules/notes/create';
 import notesDelete from './modules/notes/delete';
+import notesEdit from './modules/notes/edit';
 
 /* Authentication handlers */
 import register from './modules/auth/register';
@@ -65,11 +67,24 @@ app.post('/create/:item', (req: Request, res: Response) => {
   }
 });
 
-app.post('/delete/:item', (req: Request, res: Response) => {
+app.delete('/delete/:item', (req: Request, res: Response) => {
   if (req.params.item === 'passwords') {
     return passwordsDelete(req, res);
   } else if (req.params.item === 'notes') {
     return notesDelete(req, res);
+  } else {
+    return res.json({
+      status: false,
+      message: 'Please call a valid API endpoint'
+    });
+  }
+});
+
+app.patch('/edit/:item', (req: Request, res: Response) => {
+  if (req.params.item === 'passwords') {
+    return passwordsEdit(req, res);
+  } else if (req.params.item === 'notes') {
+    return notesEdit(req, res);
   } else {
     return res.json({
       status: false,

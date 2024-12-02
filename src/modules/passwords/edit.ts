@@ -2,16 +2,17 @@ import { Request, Response } from 'express';
 import User from '../../models/User';
 import Password from '../../models/Password';
 import { Types } from 'mongoose';
-import jwt from 'jsonwebtoken';
+import thencrypt from 'thencrypt';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 dotenv.config();
 
-const passwordsDelete = async (
+const passwordsEdit = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    const { token, passwordId } = req.body;
+    const { token, passwordId, siteAddress, username, password } = req.body;
     if (!token) {
       return res
         .status(400)
@@ -32,19 +33,34 @@ const passwordsDelete = async (
     if (!user.passwords.includes(passwordObjectId)) {
       return res.status(403).json({
         status: false,
-        message: 'You do not have permission to delete this password'
+        message: 'You do not have permission to edit this password'
       });
     }
 
-    await Password.deleteOne({ _id: passwordObjectId });
-    user.passwords = user.passwords.filter(
-      (id) => !id.equals(passwordObjectId)
-    );
-    await user.save();
+    const passwordEntry = await Password.findById(passwordObjectId);
+    if (!passwordEntry) {
+      return res
+        .status(404)
+        .json({ status: false, message: 'Password not found' });
+    }
+
+    const encryptor = new thencrypt(process.env.ENCRYPTION_KEY as string);
+
+    if (siteAddress) {
+      passwordEntry.siteAddress = await encryptor.encrypt(siteAddress);
+    }
+    if (username) {
+      passwordEntry.username = await encryptor.encrypt(username);
+    }
+    if (password) {
+      passwordEntry.password = await encryptor.encrypt(password);
+    }
+
+    await passwordEntry.save();
 
     return res
       .status(200)
-      .json({ status: true, message: 'Password deleted successfully' });
+      .json({ status: true, message: 'Password updated successfully' });
   } catch (error) {
     console.error(error);
     return res
@@ -53,4 +69,4 @@ const passwordsDelete = async (
   }
 };
 
-export default passwordsDelete;
+export default passwordsEdit;

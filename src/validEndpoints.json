@@ -1,20 +1,52 @@
 {
   "status": true,
-  "version": "0.5.1",
+  "version": "0.6.1",
   "endpoints": {
     "passwords": {
-      "fetch": "/fetch/passwords",
-      "create": "/create/passwords",
-      "delete": "/delete/passwords"
+      "fetch": {
+        "endpoint": "/fetch/passwords",
+        "method": "POST"
+      },
+      "create": {
+        "endpoint": "/create/passwords",
+        "method": "POST"
+      },
+      "delete": {
+        "endpoint": "/fetch/passwords",
+        "method": "DELETE"
+      },
+      "edit": {
+        "endpoint": "/edit/passwords",
+        "method": "PATCH"
+      }
     },
     "notes": {
-      "fetch": "/fetch/notes",
-      "create": "/create/notes",
-      "delete": "/delete/notes"
+      "fetch": {
+        "endpoint": "/fetch/notes",
+        "method": "POST"
+      },
+      "create": {
+        "endpoint": "/create/notes",
+        "method": "POST"
+      },
+      "delete": {
+        "endpoint": "/fetch/notes",
+        "method": "DELETE"
+      },
+      "edit": {
+        "endpoint": "/edit/notes",
+        "method": "PATCH"
+      }
     },
     "auth": {
-      "login": "/auth/login",
-      "register": "/auth/register"
+      "login": {
+        "endpoint": "/auth/login",
+        "method": "POST"
+      },
+      "register": {
+        "endpoint": "/auth/register",
+        "method": "POST"
+      }
     }
   }
 }
